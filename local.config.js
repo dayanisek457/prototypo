@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const fs = require('fs');
 
 const base = require('./base.config');
 
@@ -9,8 +10,7 @@ module.exports = merge(base, {
 	devtool: 'cheap-module-source-map',
 	entry: {
 		index: [
-			'webpack-dev-server/client?http://0.0.0.0:9000', // WebpackDevServer host and port
-			'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+			'whatwg-fetch',
 		],
 	},
 	module: {
@@ -24,12 +24,15 @@ module.exports = merge(base, {
 		],
 	},
 	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
-		new webpack.DllReferencePlugin({
-			context: __dirname,
-			manifest: require('./dist/dll/libs-manifest'),
-			sourceType: 'this',
-		}),
+		...(fs.existsSync(path.resolve(__dirname, './dist/dll/libs-manifest.json'))
+			? [
+				new webpack.DllReferencePlugin({
+					context: __dirname,
+					manifest: require('./dist/dll/libs-manifest.json'),
+					sourceType: 'this',
+				}),
+			]
+			: []),
 		new webpack.DefinePlugin({
 			'process.env': {
 				TESTING_FONT: JSON.stringify('yes'),

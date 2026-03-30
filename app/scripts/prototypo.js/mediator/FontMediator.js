@@ -8,9 +8,8 @@ import WorkerPool from '../../worker/worker-pool';
 
 import {fontToSfntTable} from '../../opentype/font';
 
-const MERGE_URL = process.env.MERGE
-	? 'http://localhost:3000'
-	: 'https://merge.prototypo.io/v1';
+const MERGE_URL = 'http://localhost:3000';
+const USE_LOCAL_MERGE = true;
 const GLYPHR_URL = 'http://www.glyphrstudio.com/online';
 
 const oldFont = {};
@@ -79,6 +78,10 @@ function getComponentIdAndGlyphPerClass(typedata) {
 }
 
 async function mergeFont(url, action, params, arrayBuffer, mime = 'otf') {
+	if (USE_LOCAL_MERGE) {
+		return arrayBuffer;
+	}
+
 	const response = await fetch([url, action, ...params].join('/'), {
 		method: 'POST',
 		headers: {'Content-Type': `application/${mime}`},
@@ -267,6 +270,11 @@ export default class FontMediator {
 					},
 				},
 				callback: async (arrayBuffer) => {
+					if (USE_LOCAL_MERGE) {
+						resolve(arrayBuffer);
+						return;
+					}
+
 					const id = getUuid(this.email, familyName, styleName);
 
 					const mergedFont = await mergeFont(

@@ -4,7 +4,6 @@ import _uniq from 'lodash/uniq';
 import _cloneDeep from 'lodash/cloneDeep';
 
 import FontMediator from './mediator/FontMediator';
-import isProduction from '../helpers/is-production.helpers';
 
 export const templateNames = {
 	ELZEVIR: 'elzevir.ptf?new',
@@ -14,9 +13,7 @@ export const templateNames = {
 	ANTIQUE: 'antique.ptf?new',
 };
 
-const awsUrl = isProduction()
-	? 'https://67phw2at83.execute-api.eu-west-3.amazonaws.com/prod/fonts/'
-	: 'https://mnhdjpr7jc.execute-api.eu-west-3.amazonaws.com/dev/fonts/';
+const awsUrl = '/templates/';
 
 const validTemplates = [
 	...Object.values(templateNames),
@@ -48,11 +45,9 @@ export default class Ptypo {
 						);
 					}
 
-					const data = await fetch(url + fontTemplate, {
+					const normalizedName = fontTemplate.split('?')[0];
+					const data = await fetch(`${url}${normalizedName}/font.json`, {
 						method: 'GET',
-						headers: {
-							Authorization: `Bearer ${this.token}`,
-						},
 					});
 
 					if (!data.ok && data.status === 403) {
