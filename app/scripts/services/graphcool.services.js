@@ -642,18 +642,22 @@ function handleOperation(operation) {
 const networkInterface = createBatchingNetworkInterface({
 	uri: 'http://localhost/local-graphql',
 	batchInterval: 10,
-	batchFetchFunction: async (url, opts = {}) => {
-		const body = opts.body ? JSON.parse(opts.body) : [];
-		const operations = Array.isArray(body) ? body : [body];
-		const payload = operations.map(handleOperation);
-		const result = Array.isArray(body) ? payload : payload[0];
-
-		return new Response(JSON.stringify(result), {
-			status: 200,
-			headers: {'Content-Type': 'application/json'},
-		});
-	},
 });
+
+networkInterface.batchedFetchFromRemoteEndpoint = async ({
+	requests,
+	options,
+}) => {
+	const payload = requests.map(handleOperation);
+
+	return {
+		ok: true,
+		status: 200,
+		statusText: 'OK',
+		options,
+		json: async () => payload,
+	};
+};
 
 networkInterface.use([
 	{

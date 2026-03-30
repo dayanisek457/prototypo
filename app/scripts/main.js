@@ -185,6 +185,7 @@ selectRenderOptions(
 				'Template bootstrap failed in local mode. Verify dist/templates/*/font.json files exist.',
 				e,
 			);
+			pleaseWait.instance.finish();
 		}
 
 		const content = document.getElementById('content');
