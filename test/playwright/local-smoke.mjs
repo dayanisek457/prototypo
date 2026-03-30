@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 
 async function run() {
@@ -67,7 +68,7 @@ async function run() {
 		await page.click('#export-to-merged-otf');
 		const download = await downloadPromise;
 
-		const outputDir = '/tmp/playwright-logs';
+		const outputDir = path.join(os.tmpdir(), 'playwright-logs');
 		await fs.mkdir(outputDir, {recursive: true});
 
 		const downloadPath = path.join(
@@ -78,6 +79,7 @@ async function run() {
 
 		const fileBuffer = await fs.readFile(downloadPath);
 		const signature = fileBuffer.subarray(0, 4).toString('latin1');
+		// OTTO = OpenType/CFF, \x00\x01\x00\x00 = TrueType, wOFF = WOFF1, wOF2 = WOFF2.
 		const validSignatures = new Set(['OTTO', '\x00\x01\x00\x00', 'wOFF', 'wOF2']);
 
 		if (!validSignatures.has(signature)) {
