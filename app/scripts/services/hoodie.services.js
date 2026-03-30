@@ -224,7 +224,7 @@ export default class HoodieApi {
 function setupHoodie(data) {
 	HoodieApi.instance.email = data.email;
 
-	if (window.Intercom && typeof window.Intercom === 'function') {
+	if (typeof window.Intercom === 'function') {
 		window.Intercom('boot', {
 			app_id: 'local-dev',
 			email: HoodieApi.instance.email,

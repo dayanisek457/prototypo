@@ -45,8 +45,8 @@ export default class Ptypo {
 						);
 					}
 
-					const normalizedName = fontTemplate.split('?')[0];
-					const data = await fetch(`${url}${normalizedName}/font.json`, {
+					const baseTemplateName = fontTemplate.split('?')[0];
+					const data = await fetch(`${url}${baseTemplateName}/font.json`, {
 						method: 'GET',
 					});
 

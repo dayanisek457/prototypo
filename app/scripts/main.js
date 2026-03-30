@@ -167,14 +167,24 @@ selectRenderOptions(
 				}),
 			);
 
-			await FontMediator.init(templates);
+			FontMediator.init(templates)
+				.then(() => {
+					const patch = prototypoStore.set('templatesData', templates).commit();
 
-			const patch = prototypoStore.set('templatesData', templates).commit();
-
-			localServer.dispatchUpdate('/prototypoStore', patch);
+					localServer.dispatchUpdate('/prototypoStore', patch);
+				})
+				.catch((e) => {
+					console.warn(
+						'Template initialization failed in local mode. Verify dist/templates/*/font.json files exist.',
+						e,
+					);
+				});
 		}
 		catch (e) {
-			console.warn('Template bootstrap failed in local mode', e);
+			console.warn(
+				'Template bootstrap failed in local mode. Verify dist/templates/*/font.json files exist.',
+				e,
+			);
 		}
 
 		const content = document.getElementById('content');
