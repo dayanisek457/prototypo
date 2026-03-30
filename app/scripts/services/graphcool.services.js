@@ -177,9 +177,34 @@ function mutationDataFromQuery(query) {
 	return null;
 }
 
+function normalizeOperationQuery(query) {
+	if (typeof query === 'string') {
+		return query;
+	}
+
+	if (query && query.loc && query.loc.source && query.loc.source.body) {
+		return query.loc.source.body;
+	}
+
+	if (query && Array.isArray(query.definitions)) {
+		return query.definitions
+			.map((definition) => {
+				const operation = definition && definition.operation;
+				const name = definition && definition.name && definition.name.value;
+				const operationName = operation && name ? `${operation} ${name}` : '';
+				const serialized = definition ? JSON.stringify(definition) : '';
+
+				return `${operationName} ${serialized}`;
+			})
+			.join(' ');
+	}
+
+	return '';
+}
+
 function handleOperation(operation) {
 	const db = loadDb();
-	const query = operation.query || '';
+	const query = normalizeOperationQuery(operation.query);
 	const variables = operation.variables || {};
 
 	const authMutation = mutationDataFromQuery(query);

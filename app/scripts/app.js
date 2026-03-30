@@ -350,4 +350,4 @@ class AppRoutes extends React.PureComponent {
 	}
 }
 
-export default hot(module)(AppRoutes);
+export default AppRoutes;

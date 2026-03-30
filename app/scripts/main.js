@@ -66,6 +66,16 @@ selectRenderOptions(
 		if (!window.ga) {
 			window.ga = () => {};
 		}
+		const content = document.getElementById('content');
+		let appRendered = false;
+		const renderApp = () => {
+			if (!appRendered) {
+				ReactDOM.render(<App />, content);
+				appRendered = true;
+			}
+		};
+
+		renderApp();
 
 		const stores = Stores;
 
@@ -188,8 +198,6 @@ selectRenderOptions(
 			pleaseWait.instance.finish();
 		}
 
-		const content = document.getElementById('content');
-
 		HoodieApi.setup().then(() => {
 			if (
 				location.hash.indexOf('signin') === -1
@@ -200,6 +208,7 @@ selectRenderOptions(
 				location.href = '#/library/home';
 			}
 		});
+		renderApp();
 
 		/* #if debug */
 		if (location.hash.indexOf('#/replay') === -1) {
@@ -227,6 +236,6 @@ selectRenderOptions(
 		}
 		/* #end */
 
-		ReactDOM.render(<App />, content);
+		renderApp();
 	},
 );
