@@ -75,8 +75,6 @@ selectRenderOptions(
 			}
 		};
 
-		renderApp();
-
 		const stores = Stores;
 
 		window.prototypoStores = Stores;
@@ -143,6 +141,7 @@ selectRenderOptions(
 		const fluxEvent = new Event('fluxServer.setup');
 
 		window.dispatchEvent(fluxEvent);
+		renderApp();
 
 		const eventDebugger = new EventDebugger();
 
