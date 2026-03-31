@@ -19,12 +19,12 @@
     "gfnt.ptf": "byte-foundry/spectral.ptf#feat/simplified-parameters",
     "john-fell.ptf": "byte-foundry/john-fell.ptf#feat/simplified-parameters",
     "jszip": "^2.5.0",
-    "lifespan": "FranzPoize/lifespan#master",
+    "lifespan": "https://codeload.github.com/FranzPoize/lifespan/tar.gz/0834c672b1ca8d0b5639e0b35d3190ca32cbd7c2",
     "lodash": "^4.17.11",
     "memoize-immutable": "^3.0.0",
     "moment": "^2.10.3",
-    "nexus-events": "franzpoize/nexus-events#master",
-    "nexus-flux": "FranzPoize/nexus-flux#master",
+    "nexus-events": "https://codeload.github.com/franzpoize/nexus-events/tar.gz/210dc91f2c14d11b4978d2fee88089f3fe7ab39d",
+    "nexus-flux": "https://codeload.github.com/FranzPoize/nexus-flux/tar.gz/e4097c8d1889786e92c9022fe9583e530ce1c3b0",
     "normalize.css": "^3.0.3",
     "opentype.js": "^0.6.9",
     "please-wait": "0.0.5",
@@ -54,7 +54,7 @@
     "react-transition-group": "^2.2.0",
     "react-twitter-auth": "YoruNoHikage/react-twitter-auth",
     "regenerator-runtime": "^0.13.3",
-    "remutable": "FranzPoize/remutable#master",
+    "remutable": "https://codeload.github.com/FranzPoize/remutable/tar.gz/ff2dbdb4fdae7f0704c51747e934f53c5f688c19",
     "svg-inline-react": "3.1.0",
     "tether": "^1.1.0",
     "tutorial-content": "byte-foundry/tutorial-content#master",
@@ -201,5 +201,10 @@
       "prettier-eslint --write",
       "git add"
     ]
+  },
+  "overrides": {
+    "lifespan": "https://codeload.github.com/FranzPoize/lifespan/tar.gz/0834c672b1ca8d0b5639e0b35d3190ca32cbd7c2",
+    "nexus-events": "https://codeload.github.com/franzpoize/nexus-events/tar.gz/210dc91f2c14d11b4978d2fee88089f3fe7ab39d",
+    "remutable": "https://codeload.github.com/FranzPoize/remutable/tar.gz/ff2dbdb4fdae7f0704c51747e934f53c5f688c19"
   }
 }
