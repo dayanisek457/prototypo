@@ -39,8 +39,27 @@ Running Prototypo
 -----------------
 
 ```bash
-$ yarn start
+$ npm install
+$ npm run start
 ```
+
+Local verification (sliders + export)
+-------------------------------------
+
+After `npm run start` is serving `http://127.0.0.1:3000`, run:
+
+```bash
+$ node test/playwright/local-smoke.mjs
+```
+
+What it verifies:
+- dashboard/editor loads correctly
+- a parameter slider changes control values
+- export from File menu produces a downloadable font file with a valid font signature
+
+Artifacts are written to your OS temp directory under `playwright-logs`:
+- `prototypo-dashboard-smoke.png` (UI screenshot)
+- exported font file downloaded during the smoke run
 
 Roadmap to v1.0
 ===============
