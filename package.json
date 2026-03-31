@@ -141,7 +141,7 @@
     "test": "test"
   },
   "scripts": {
-    "prepare:assets": "mkdir -p dist/assets/images dist/assets/fonts dist/assets/images/academy dist/templates/john-fell.ptf dist/templates/venus.ptf dist/templates/elzevir.ptf dist/templates/gfnt.ptf dist/templates/antique.ptf && cp node_modules/john-fell.ptf/dist/font.json dist/templates/john-fell.ptf/font.json && cp node_modules/venus.ptf/dist/font.json dist/templates/venus.ptf/font.json && cp node_modules/elzevir.ptf/dist/font.json dist/templates/elzevir.ptf/font.json && cp node_modules/gfnt.ptf/dist/font.json dist/templates/gfnt.ptf/font.json && cp node_modules/antique.ptf/dist/font.json dist/templates/antique.ptf/font.json && cp -R app/images/. dist/assets/images/ && cp -R app/fonts/. dist/assets/fonts/ && cp -R node_modules/tutorial-content/content dist/assets/images/academy/courses && cp app/index.html app/iframe.html app/robots.txt app/404.html dist/",
+    "prepare:assets": "node scripts/prepare-assets.js",
     "build:dist": "npm run prepare:assets && NODE_OPTIONS=--openssl-legacy-provider webpack --config prod.config.js",
     "build:storybook": "build-storybook",
     "debug": "gulp debug",
