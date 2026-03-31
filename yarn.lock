@@ -1511,9 +1511,10 @@ ansi-wrap@^0.1.0, ansi-wrap@0.1.0:
   resolved "https://registry.npmjs.org/ansi-wrap/-/ansi-wrap-0.1.0.tgz"
   integrity sha512-ZyznvL8k/FZeQHr2T6LzcJ/+vBApDnMNZvfVFy3At0knswWd6rJ3/0Hhmpu8oqa6C92npmozs890sX9Dl6q+Qw==
 
-antique.ptf@byte-foundry/antique.ptf#feat/simplified-parameters:
+"antique.ptf@https://codeload.github.com/byte-foundry/antique.ptf/tar.gz/e9e8ede4fc96a8bc76f599e315c4508cfb8a97cb":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/byte-foundry/antique.ptf.git#e9e8ede4fc96a8bc76f599e315c4508cfb8a97cb"
+  resolved "https://codeload.github.com/byte-foundry/antique.ptf/tar.gz/e9e8ede4fc96a8bc76f599e315c4508cfb8a97cb"
+  integrity sha512-gJpAZ5R68BU+3xfkFJtcBOwJ+YaMuLycTRmB/YFzfPLM7jUaLCq9g2HOt0JUxSUbPx0bMSKRcCMoVlsffOd/tg==
   dependencies:
     karma "^1.7.1"
     prototypo-precursor "1.0.7"
@@ -2500,9 +2501,10 @@ babel-plugin-jest-hoist@^22.4.4:
   resolved "https://registry.npmjs.org/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-22.4.4.tgz"
   integrity sha512-DUvGfYaAIlkdnygVIEl0O4Av69NtuQWcrjMOv6DODPuhuGLDnbsARz3AwiiI/EkIMMlxQDUcrZ9yoyJvTNjcVQ==
 
-babel-plugin-lodash@lodash/babel-plugin-lodash#master:
+"babel-plugin-lodash@https://codeload.github.com/lodash/babel-plugin-lodash/tar.gz/7d2342a3b849c3c8ef3b2d904b7e2394205466ff":
   version "3.3.4"
-  resolved "git+ssh://git@github.com/lodash/babel-plugin-lodash.git#7d2342a3b849c3c8ef3b2d904b7e2394205466ff"
+  resolved "https://codeload.github.com/lodash/babel-plugin-lodash/tar.gz/7d2342a3b849c3c8ef3b2d904b7e2394205466ff"
+  integrity sha512-LZKZYmwbNR5Vq37kRHOaem0nhbRA1K9DKwMjpUQSQlhlg/iu+8MfPvs016HMNG19JdqyyVz5VvGzqC4wJeoe1A==
   dependencies:
     "@babel/helper-module-imports" "^7.0.0"
     "@babel/types" "^7.0.0"
@@ -5800,9 +5802,10 @@ elliptic@^6.5.3, elliptic@^6.6.1:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
-elzevir.ptf@byte-foundry/elzevir.ptf#feat/simplified-parameters:
+"elzevir.ptf@https://codeload.github.com/byte-foundry/elzevir.ptf/tar.gz/8f443fde29f396f75eba29e77dd3ddc1a6f98a74":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/byte-foundry/elzevir.ptf.git#8f443fde29f396f75eba29e77dd3ddc1a6f98a74"
+  resolved "https://codeload.github.com/byte-foundry/elzevir.ptf/tar.gz/8f443fde29f396f75eba29e77dd3ddc1a6f98a74"
+  integrity sha512-WrrRo5DgQCDv+bZigV6bbehuh5PE0bpVAgPqwaTO3PWXsZFIbBO7P+xQlpBeXjNny+qulk6I9VWkTnt6gMhm9Q==
   dependencies:
     karma "^1.7.0"
     prototypo-precursor "^1.0.4"
@@ -7549,9 +7552,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gfnt.ptf@byte-foundry/spectral.ptf#feat/simplified-parameters:
+"gfnt.ptf@https://codeload.github.com/byte-foundry/spectral.ptf/tar.gz/4a09f9eab1e5fe54b2057761a2ef621de602de55":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/byte-foundry/spectral.ptf.git#4a09f9eab1e5fe54b2057761a2ef621de602de55"
+  resolved "https://codeload.github.com/byte-foundry/spectral.ptf/tar.gz/4a09f9eab1e5fe54b2057761a2ef621de602de55"
+  integrity sha512-VET92nRfo3RFS5Tn1NEJrSDxk/G9oMQbcJnG+4bi3TglhXcEfthkEQvYKAyy7nlxB2KeTgO9gU47AiJa0iOVhQ==
   dependencies:
     karma "^2.0.0"
     prototypo-precursor "^1.0.4"
@@ -9942,9 +9946,10 @@ jest@^22.2.1:
     import-local "^1.0.0"
     jest-cli "^22.4.4"
 
-john-fell.ptf@byte-foundry/john-fell.ptf#feat/simplified-parameters:
+"john-fell.ptf@https://codeload.github.com/byte-foundry/john-fell.ptf/tar.gz/c0b830bf5e29325e56e56b142d871c725c25b501":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/byte-foundry/john-fell.ptf.git#c0b830bf5e29325e56e56b142d871c725c25b501"
+  resolved "https://codeload.github.com/byte-foundry/john-fell.ptf/tar.gz/c0b830bf5e29325e56e56b142d871c725c25b501"
+  integrity sha512-YqH6PKwcwEpCjbltZDZfoCum2Kxm1Rx6rtyZgYhMJ5QawalTtkXXsQ95hqWxsRQ+FYBRV8GNdrIA7XPii9pF6g==
   dependencies:
     prototypo-precursor "^1.0.4"
     yargs "^11.0.0"
@@ -14013,9 +14018,10 @@ react-modal@^3.3.2:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
-react-motion-flip@Aldrian/react-motion-flip#master:
+"react-motion-flip@https://codeload.github.com/Aldrian/react-motion-flip/tar.gz/360bcf2830406c7ad5ea391877f639a76fa0ee09":
   version "1.0.2"
-  resolved "git+ssh://git@github.com/Aldrian/react-motion-flip.git#360bcf2830406c7ad5ea391877f639a76fa0ee09"
+  resolved "https://codeload.github.com/Aldrian/react-motion-flip/tar.gz/360bcf2830406c7ad5ea391877f639a76fa0ee09"
+  integrity sha512-a7WOQSQAli5rd2JoxtWt1rn24KW2ze/F9GAkx/zz4gYqTldec9sKr5A0w6w+YY9d1Zx/siAkR6aUNWzcHtwWag==
   dependencies:
     raf "^3.2.0"
     react-motion "^0.4.3"
@@ -14153,9 +14159,10 @@ react-treebeard@^2.1.0:
     shallowequal "^0.2.2"
     velocity-react "^1.3.1"
 
-react-twitter-auth@YoruNoHikage/react-twitter-auth:
+"react-twitter-auth@https://codeload.github.com/YoruNoHikage/react-twitter-auth/tar.gz/966a9df986190e8aff8abfb90ab6e1e501011a27":
   version "0.0.11"
-  resolved "git+ssh://git@github.com/YoruNoHikage/react-twitter-auth.git#966a9df986190e8aff8abfb90ab6e1e501011a27"
+  resolved "https://codeload.github.com/YoruNoHikage/react-twitter-auth/tar.gz/966a9df986190e8aff8abfb90ab6e1e501011a27"
+  integrity sha512-uAQ5lLqUSHbHlo73hStjD8Pppva/xdkZ7Fi/D7AQq9uwx+Joh1neWO6XnxzAhIHzo9km9y1MdsXpH/hgDenMWw==
   dependencies:
     react-icons "^2.2.5"
     url-search-params-polyfill "^2.0.0"
@@ -16738,9 +16745,10 @@ tuplemap@^1.0.2:
   resolved "https://registry.npmjs.org/tuplemap/-/tuplemap-1.0.2.tgz"
   integrity sha512-slE25cDmdTy0fR+2p9UlzbOWwkTmyOdmOYR+y76SEf20IqaDUDzNQEKvL8r9QyjhdJZCWByG31tjbR7dwLGiAA==
 
-tutorial-content@byte-foundry/tutorial-content#master:
+"tutorial-content@https://codeload.github.com/byte-foundry/tutorial-content/tar.gz/98ee42670ffb38f42be70648107e31339e7a39eb":
   version "3.1.3"
-  resolved "git+ssh://git@github.com/byte-foundry/tutorial-content.git#98ee42670ffb38f42be70648107e31339e7a39eb"
+  resolved "https://codeload.github.com/byte-foundry/tutorial-content/tar.gz/98ee42670ffb38f42be70648107e31339e7a39eb"
+  integrity sha512-Xn2xo8ey584Kx3mApP2v12Ji7ngJcu2zRGI6GKHUspaHTlZpHgaflFhKXlbjC3aWnC19xcUWOU1EX855I8fa2A==
   dependencies:
     babel-cli "^7.0.0-beta.3"
     babel-plugin-add-module-exports "^0.2.1"
@@ -17257,9 +17265,10 @@ vendors@^1.0.0:
   resolved "https://registry.npmjs.org/vendors/-/vendors-1.0.4.tgz"
   integrity sha512-/juG65kTL4Cy2su4P8HjtkTxk6VmJDiOPBufWniqQ6wknac6jNiXS9vU+hO3wgusiyqWlzTbVHi0dyJqRONg3w==
 
-"venus.ptf@https://github.com/byte-foundry/venus.ptf#feat/simplified-params":
+"venus.ptf@https://codeload.github.com/byte-foundry/venus.ptf/tar.gz/beca948c3859a5f9e7857394dfd0f4c45911a6ac":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/byte-foundry/venus.ptf.git#beca948c3859a5f9e7857394dfd0f4c45911a6ac"
+  resolved "https://codeload.github.com/byte-foundry/venus.ptf/tar.gz/beca948c3859a5f9e7857394dfd0f4c45911a6ac"
+  integrity sha512-0a3dypqEFQ6jTtlvD2XyrABaumd7nao/bUMClFAKRX98sbCfKVXiAZKL2s38V03WZLJC4VGCyJcKqBAnTUwXCQ==
   dependencies:
     prototypo-precursor "^1.0.7"
     yargs "^11.0.0"
