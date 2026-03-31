@@ -23,7 +23,7 @@
     "lodash": "^4.17.11",
     "memoize-immutable": "^3.0.0",
     "moment": "^2.10.3",
-    "nexus-events": "https://codeload.github.com/franzpoize/nexus-events/tar.gz/210dc91f2c14d11b4978d2fee88089f3fe7ab39d",
+    "nexus-events": "https://codeload.github.com/FranzPoize/nexus-events/tar.gz/210dc91f2c14d11b4978d2fee88089f3fe7ab39d",
     "nexus-flux": "https://codeload.github.com/FranzPoize/nexus-flux/tar.gz/e4097c8d1889786e92c9022fe9583e530ce1c3b0",
     "normalize.css": "^3.0.3",
     "opentype.js": "^0.6.9",
@@ -204,7 +204,8 @@
   },
   "overrides": {
     "lifespan": "https://codeload.github.com/FranzPoize/lifespan/tar.gz/0834c672b1ca8d0b5639e0b35d3190ca32cbd7c2",
-    "nexus-events": "https://codeload.github.com/franzpoize/nexus-events/tar.gz/210dc91f2c14d11b4978d2fee88089f3fe7ab39d",
+    "nexus-events": "https://codeload.github.com/FranzPoize/nexus-events/tar.gz/210dc91f2c14d11b4978d2fee88089f3fe7ab39d",
+    "nexus-flux": "https://codeload.github.com/FranzPoize/nexus-flux/tar.gz/e4097c8d1889786e92c9022fe9583e530ce1c3b0",
     "remutable": "https://codeload.github.com/FranzPoize/remutable/tar.gz/ff2dbdb4fdae7f0704c51747e934f53c5f688c19"
   }
 }
