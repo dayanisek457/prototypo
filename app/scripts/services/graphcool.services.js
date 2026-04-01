@@ -376,13 +376,6 @@ function handleOperation(operation) {
 		};
 	}
 
-	if (
-		query.includes('query getLibraryUserInfos') ||
-		query.includes('query {')
-	) {
-		return {data: {user: clone(buildUserPayload(db))}};
-	}
-
 	if (query.includes('allAbstractedFonts')) {
 		const allAbstractedFonts = clone(db.abstractedFonts || []);
 		const where = variables.where || {};
@@ -410,6 +403,13 @@ function handleOperation(operation) {
 		}
 
 		return {data: {allAbstractedFonts}};
+	}
+
+	if (
+		query.includes('query getLibraryUserInfos') ||
+		query.includes('query {')
+	) {
+		return {data: {user: clone(buildUserPayload(db))}};
 	}
 
 	if (query.includes('Variant(id: $id)')) {
