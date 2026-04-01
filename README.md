@@ -61,6 +61,22 @@ Artifacts are written to your OS temp directory under `playwright-logs`:
 - `prototypo-dashboard-smoke.png` (UI screenshot)
 - exported font file downloaded during the smoke run
 
+If you still see Sass deprecation floods on `npm run start` (for example `lighten()` / `global-builtin` warnings), your local checkout is likely using stale lockfiles or stale `node_modules` from older commits. Do a clean reinstall, then start again:
+
+```bash
+# Linux/macOS
+rm -rf node_modules package-lock.json yarn.lock
+npm install
+npm run start
+```
+
+```powershell
+# Windows PowerShell
+Remove-Item -Recurse -Force node_modules, package-lock.json, yarn.lock
+npm install
+npm run start
+```
+
 Roadmap to v1.0
 ===============
 
