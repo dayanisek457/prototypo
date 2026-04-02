@@ -31,6 +31,23 @@ class FontUpdater extends React.Component {
 	render() {
 		const {template, name, subset, glyph, values, family, variant} = this.props;
 
+		if (!values) {
+			return false;
+		}
+
+		const templateInitValues
+			= (this.fontMediatorInstance.initValues || {})[template] || {};
+		const sanitizedValues = {
+			...templateInitValues,
+			...Object.keys(values).reduce((acc, key) => {
+				if (values[key] !== undefined) {
+					acc[key] = values[key];
+				}
+
+				return acc;
+			}, {}),
+		};
+
 		const subsetCodes = _uniq(subset.split('')).map(letter =>
 			letter.charCodeAt(0),
 		);
@@ -45,7 +62,7 @@ class FontUpdater extends React.Component {
 		this.fontMediatorInstance.getFont(
 			name,
 			template,
-			values,
+			sanitizedValues,
 			subsetCodes,
 			glyph,
 		);
