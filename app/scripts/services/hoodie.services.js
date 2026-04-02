@@ -43,8 +43,12 @@ async function fetchAWS(endpoint, params = {}) {
 	if (endpoint.includes('/customers/')) {
 		return {
 			id: customerId,
+			sources: {data: []},
 			subscriptions: {data: [{id: subscriptionId}]},
-			credits: 9999,
+			metadata: {
+				credits: 9999,
+				hasBeenSubscribing: false,
+			},
 		};
 	}
 	if (endpoint.includes('/reset_password')) {

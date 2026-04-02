@@ -142,10 +142,10 @@
   },
   "scripts": {
     "prepare:assets": "node scripts/prepare-assets.js",
-    "build:dist": "npm run prepare:assets && node --openssl-legacy-provider ./node_modules/webpack/bin/webpack.js --config prod.config.js",
+    "build:dist": "npm run prepare:assets && node ./scripts/run-webpack.js prod.config.js",
     "build:storybook": "build-storybook",
     "debug": "gulp debug",
-    "start": "npm run prepare:assets && node --openssl-legacy-provider ./node_modules/webpack/bin/webpack.js --config dev.config.js && node ./scripts/serve-dist.js",
+    "start": "npm run prepare:assets && node ./scripts/run-webpack.js dev.config.js && node ./scripts/serve-dist.js",
     "start:merge": "MERGE=true gulp serve",
     "start:perf": "gulp serve:perf",
     "storybook": "start-storybook -p 6006",

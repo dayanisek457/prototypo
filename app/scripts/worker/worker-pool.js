@@ -52,8 +52,9 @@ export default class WorkerPool {
 			});
 
 			worker.addEventListener('message', (e) => {
-				if (e.data instanceof ArrayBuffer) {
-					const data = e.data;
+				const {data} = e;
+
+				if (data instanceof ArrayBuffer) {
 
 					const idLengthView = new DataView(data, 0, 1);
 					const idLength = idLengthView.getUint8(0);
@@ -64,18 +65,22 @@ export default class WorkerPool {
 
 					const fontBuffer = data.slice(1 + idLength, data.byteLength);
 
-					this.jobCallback[id](fontBuffer);
-					this.jobCallback[id] = undefined;
+					if (this.jobCallback[id]) {
+						this.jobCallback[id](fontBuffer);
+						delete this.jobCallback[id];
+					}
 				}
-				else if (e.data.id.indexOf('each') === 0) {
+				else if (data && typeof data.id === 'string' && data.id.indexOf('each') === 0) {
 					// TODO(franz): think about timing out
 					if (eachJobList.length < numberOfWorker - 1) {
 						eachJobList.push(1);
 					}
 					else {
 						eachJobList = [];
-						this.jobCallback[e.data.id](e.data);
-						this.jobCallback[e.data.id] = undefined;
+						if (this.jobCallback[data.id]) {
+							this.jobCallback[data.id](data);
+							delete this.jobCallback[data.id];
+						}
 					}
 				}
 

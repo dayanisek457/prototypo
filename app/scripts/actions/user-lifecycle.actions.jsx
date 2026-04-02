@@ -112,10 +112,14 @@ const validateCoupon = debounce(
 );
 
 export default {
-	'/load-customer-data': ({sources, subscriptions, metadata}) => {
+	'/load-customer-data': (customer = {}) => {
+		const sources = customer.sources || {data: []};
+		const subscriptions = customer.subscriptions || {data: []};
+		const metadata = customer.metadata || {};
+
 		const userPatch = userStore
-			.set('subscription', subscriptions.data[0])
-			.set('cards', sources.data)
+			.set('subscription', (subscriptions.data || [])[0])
+			.set('cards', sources.data || [])
 			.set('hasBeenSubscribing', metadata.hasBeenSubscribing || false)
 			.commit();
 

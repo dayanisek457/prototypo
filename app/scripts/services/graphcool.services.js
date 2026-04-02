@@ -661,6 +661,10 @@ function handleOperation(operation) {
 		return {data: {updateAccessToken: clone(db.user.accessToken)}};
 	}
 
+	if (!query.includes('mutation') && query.includes('user')) {
+		return {data: {user: clone(buildUserPayload(db))}};
+	}
+
 	return {data: {}};
 }
 

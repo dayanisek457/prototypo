@@ -45,7 +45,7 @@ class LibraryCreate extends React.Component {
 		});
 	}
 
-	createProject(template, values, abstractedFontMeta) {
+	createProject(template, values = {}, abstractedFontMeta) {
 		this.props.router.push({
 			pathname: '/onboarding',
 			state: {template, values, abstractedFontMeta},
@@ -132,8 +132,18 @@ class LibraryCreate extends React.Component {
 	}
 
 	generateFonts(f, p) {
-		const families = f || this.props.families;
-		const presets = p || this.props.presets;
+		const families = Array.isArray(f || this.props.families)
+			? f || this.props.families
+			: [];
+		const presets = Array.isArray(p || this.props.presets)
+			? p || this.props.presets
+			: [];
+		const {templateInfos, templatesData} = this.state;
+
+		if (!Array.isArray(templateInfos) || !Array.isArray(templatesData)) {
+			return;
+		}
+
 		const customBadgesColor = [
 			'#29ABE2',
 			'#0000FF',
@@ -148,78 +158,81 @@ class LibraryCreate extends React.Component {
 		const fontsToGenerate = [];
 		const fontData = [];
 
-		this.state.templateInfos
-			&& this.state.templateInfos.forEach((template) => {
-				const templateData = this.state.templatesData.find(
-					e => e.name === template.templateName,
-				);
+		templateInfos.forEach((template) => {
+			const templateData = templatesData.find(
+				e => e.name === template.templateName,
+			);
 
-				fontData.push({
-					template: template.templateName,
-					templateName: template.name,
-					name: template.name,
-					tags: [template.provider, 'template'],
-					designer: template.provider,
-					id: template.id,
-					type: 'Template',
-					props: this.getTemplateProps(template, templateData),
-					elem: TemplateItem,
-				});
+			if (!templateData || !templateData.initValues) {
+				return;
+			}
+
+			fontData.push({
+				template: template.templateName,
+				templateName: template.name,
+				name: template.name,
+				tags: [template.provider, 'template'],
+				designer: template.provider,
+				id: template.id,
+				type: 'Template',
+				props: this.getTemplateProps(template, templateData),
+				elem: TemplateItem,
 			});
-		const havasPreset
-			= presets
-			&& this.state.templateInfos
-			&& presets.find(e => e.ownerInitials === 'HAVAS');
+		});
+		const havasPreset = presets.find(e => e.ownerInitials === 'HAVAS');
 
 		if (havasPreset) {
-			const templateInfo = this.state.templateInfos.find(
+			const templateInfo = templateInfos.find(
 				template => havasPreset.template === template.templateName,
 			) || {name: 'Undefined'};
-			const templateData = this.state.templatesData.find(
+			const templateData = templatesData.find(
 				e => e.name === havasPreset.template,
 			);
 
-			fontData.push({
-				template: templateInfo.templateName,
-				templateName: templateInfo.name,
-				type: 'Preset',
-				name: havasPreset.variant.family.name,
-				designer: 'Havas',
-				id: havasPreset.id,
-				tags: [],
-				props: this.getPresetProps(
-					havasPreset,
-					templateInfo,
-					templateData,
-					lmColor,
-					hmColor,
-				),
-				elem: PresetItem,
-			});
+			if (templateData && templateData.initValues) {
+				fontData.push({
+					template: templateInfo.templateName,
+					templateName: templateInfo.name,
+					type: 'Preset',
+					name: havasPreset.variant.family.name,
+					designer: 'Havas',
+					id: havasPreset.id,
+					tags: [],
+					props: this.getPresetProps(
+						havasPreset,
+						templateInfo,
+						templateData,
+						lmColor,
+						hmColor,
+					),
+					elem: PresetItem,
+				});
+			}
 		}
 
-		const filteredPresets
-			= presets
-			&& this.state.templateInfos
-			&& presets.filter(
-				preset =>
-					preset.variant.family.name !== 'Spectral'
-					&& preset.variant.family.name !== 'Elzevir'
-					&& preset.variant.family.name !== 'Grotesk'
-					&& preset.variant.family.name !== 'Fell'
-					&& preset.variant.family.name !== 'Antique'
-					&& preset.variant.family.name !== 'Prototypo Grotesk'
-					&& preset.ownerInitials !== 'HAVAS',
-			);
+		const filteredPresets = presets.filter(
+			preset =>
+				preset.variant.family.name !== 'Spectral'
+				&& preset.variant.family.name !== 'Elzevir'
+				&& preset.variant.family.name !== 'Grotesk'
+				&& preset.variant.family.name !== 'Fell'
+				&& preset.variant.family.name !== 'Antique'
+				&& preset.variant.family.name !== 'Prototypo Grotesk'
+				&& preset.ownerInitials !== 'HAVAS',
+		);
 
 		if (filteredPresets) {
 			filteredPresets.forEach((preset) => {
-				const templateInfo = this.state.templateInfos.find(
+				const templateInfo = templateInfos.find(
 					template => preset.template === template.templateName,
 				) || {name: 'Undefined'};
-				const templateData = this.state.templatesData.find(
+				const templateData = templatesData.find(
 					e => e.name === preset.template,
 				);
+
+				if (!templateData || !templateData.initValues) {
+					return;
+				}
 
 				fontData.push({
 					template: templateInfo.templateName,
@@ -244,16 +257,23 @@ class LibraryCreate extends React.Component {
 			});
 		}
 		families.forEach((family) => {
-			const templateInfo = this.state.templateInfos.find(
+			const templateInfo = templateInfos.find(
 				template => template.templateName === family.template,
 			) || {name: 'Undefined'};
-			const templateData = this.state.templatesData.find(
+			const templateData = templatesData.find(
 				e => e.name === family.template,
 			);
+			const variants = Array.isArray(family.variants)
+				? family.variants.filter(Boolean)
+				: [];
+
+			if (!templateData || !templateData.initValues || variants.length === 0) {
+				return;
+			}
 
 			const variantToLoad
-				= family.variants.find(e => e.name.toLowerCase() === 'regular')
-				|| family.variants[0];
+				= variants.find(e => e && e.name && e.name.toLowerCase() === 'regular')
+				|| variants[0];
 
 			fontsToGenerate.push({
 				name: `user${family.id}`,
@@ -377,7 +397,10 @@ export class TemplateItem extends React.Component {
 							.join('')}`,
 					}}
 					onClick={() => {
-						this.props.createProject(this.props.template.templateName);
+						this.props.createProject(
+							this.props.template.templateName,
+							this.props.values,
+						);
 					}}
 				>
 					Hamburgefonstiv 123
