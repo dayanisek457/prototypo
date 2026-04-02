@@ -73,7 +73,7 @@ class LibraryList extends React.Component {
 		this.lifespan.release();
 	}
 
-	createProject(template, values, abstractedFontMeta) {
+	createProject(template, values = {}, abstractedFontMeta) {
 		this.props.router.push({
 			pathname: '/onboarding',
 			state: {template, values, abstractedFontMeta},
@@ -226,13 +226,21 @@ class LibraryList extends React.Component {
 	}
 
 	generateFonts(f, p, fa) {
-		if (!this.state.templateInfos || !this.state.templatesData) {
+		const {templateInfos, templatesData} = this.state;
+
+		if (!Array.isArray(templateInfos) || !Array.isArray(templatesData)) {
 			return;
 		}
 
-		const families = f || this.props.families;
-		const presets = p || this.props.presets;
-		const favourites = fa || this.props.favourites || [];
+		const families = Array.isArray(f || this.props.families)
+			? f || this.props.families
+			: [];
+		const presets = Array.isArray(p || this.props.presets)
+			? p || this.props.presets
+			: [];
+		const favourites = Array.isArray(fa || this.props.favourites)
+			? fa || this.props.favourites
+			: [];
 		const customBadgesColor = [
 			'#003049',
 			'#D62828',
@@ -255,36 +263,43 @@ class LibraryList extends React.Component {
 
 		const fontData = [];
 
-		this.state.templateInfos
-			&& this.state.templateInfos.forEach((template) => {
-				const templateData = this.state.templatesData.find(
-					e => e.name === template.templateName,
-				);
+		templateInfos.forEach((template) => {
+			const templateData = templatesData.find(
+				e => e.name === template.templateName,
+			);
 
-				fontData.push({
-					template: template.templateName,
-					templateName: template.name,
-					name: template.name,
-					tags: [],
-					designer: template.provider,
-					id: template.id,
-					type: 'Template',
-					props: this.getTemplateProps(template, templateData, favourites),
-					elem: TemplateItem,
-				});
+			if (!templateData || !templateData.initValues) {
+				return;
+			}
+
+			fontData.push({
+				template: template.templateName,
+				templateName: template.name,
+				name: template.name,
+				tags: [],
+				designer: template.provider,
+				id: template.id,
+				type: 'Template',
+				props: this.getTemplateProps(template, templateData, favourites),
+				elem: TemplateItem,
 			});
+		});
 		const havasPreset
 			= presets
-			&& this.state.templateInfos
+			&& templateInfos
 			&& presets.find(e => e.ownerInitials === 'HAVAS');
 
 		if (havasPreset) {
-			const templateInfo = this.state.templateInfos.find(
+			const templateInfo = templateInfos.find(
 				template => havasPreset.template === template.templateName,
 			) || {name: 'Undefined'};
-			const templateData = this.state.templatesData.find(
+			const templateData = templatesData.find(
 				e => e.name === havasPreset.template,
 			);
+
+			if (!templateData || !templateData.initValues) {
+				return;
+			}
 
 			fontData.push({
 				template: templateInfo.templateName,
@@ -307,7 +322,7 @@ class LibraryList extends React.Component {
 		}
 		const filteredPresets
 			= presets
-			&& this.state.templateInfos
+			&& templateInfos
 			&& presets.filter(
 				preset =>
 					preset.variant.family.name !== 'Spectral'
@@ -321,12 +336,16 @@ class LibraryList extends React.Component {
 
 		if (filteredPresets) {
 			filteredPresets.forEach((preset) => {
-				const templateInfo = this.state.templateInfos.find(
+				const templateInfo = templateInfos.find(
 					template => preset.template === template.templateName,
 				) || {name: 'Undefined'};
-				const templateData = this.state.templatesData.find(
+				const templateData = templatesData.find(
 					e => e.name === preset.template,
 				);
+
+				if (!templateData || !templateData.initValues) {
+					return;
+				}
 
 				fontData.push({
 					template: templateInfo.templateName,
@@ -354,21 +373,28 @@ class LibraryList extends React.Component {
 		const allTags = [];
 
 		families
-			&& this.state.templateInfos
+			&& templateInfos
 			&& families.forEach((family) => {
-				const templateInfo = this.state.templateInfos.find(
+				const templateInfo = templateInfos.find(
 					template => template.templateName === family.template,
 				);
 
 				if (!templateInfo) return;
-				const templateData = this.state.templatesData.find(
+				const templateData = templatesData.find(
 					e => e.name === family.template,
 				);
+				const variants = Array.isArray(family.variants)
+					? family.variants.filter(Boolean)
+					: [];
+
+				if (!templateData || !templateData.initValues || variants.length === 0) {
+					return;
+				}
 
 				family.tags && family.tags.map(tag => allTags.push(tag));
 				const variantToLoad
-					= family.variants.find(e => e.name.toLowerCase() === 'regular')
-					|| family.variants[0];
+					= variants.find(e => e.name && e.name.toLowerCase() === 'regular')
+					|| variants[0];
 
 				if (variantToLoad) {
 					fontData.push({
@@ -383,7 +409,7 @@ class LibraryList extends React.Component {
 								: templateInfo.provider,
 						type: 'Font',
 						tags: family.tags || [],
-						variants: family.variants,
+						variants,
 						id: family.id,
 						user: {
 							firstName: this.props.firstName,
@@ -405,23 +431,36 @@ class LibraryList extends React.Component {
 			});
 
 		this.props.subUsers
-			&& this.state.templateInfos
+			&& templateInfos
 			&& this.props.subUsers.forEach((subUser, index) => {
 				const subUserColor = subUserColors[index % subUserColors.length];
 
 				subUser.id !== this.props.user.id
 					&& subUser.library.forEach((family) => {
-						const templateInfo = this.state.templateInfos.find(
+						const templateInfo = templateInfos.find(
 							template => template.templateName === family.template,
 						) || {name: 'Undefined'};
-						const templateData = this.state.templatesData.find(
+						const templateData = templatesData.find(
 							e => e.name === family.template,
 						);
+						const variants = Array.isArray(family.variants)
+							? family.variants.filter(Boolean)
+							: [];
+
+						if (
+							!templateData ||
+							!templateData.initValues ||
+							variants.length === 0
+						) {
+							return;
+						}
 
 						family.tags && family.tags.map(tag => allTags.push(tag));
 						const variantToLoad
-							= family.variants.find(e => e.name.toLowerCase() === 'regular')
-							|| family.variants[0];
+							= variants.find(
+								e => e.name && e.name.toLowerCase() === 'regular',
+							)
+							|| variants[0];
 
 						if (variantToLoad) {
 							fontData.push({
@@ -436,7 +475,7 @@ class LibraryList extends React.Component {
 										: templateInfo.provider,
 								type: 'SubUser',
 								tags: family.tags || [],
-								variants: family.variants,
+								variants,
 								id: family.id,
 								user: {
 									firstName: subUser.firstName,
@@ -856,7 +895,10 @@ export class TemplateItem extends React.Component {
 						floated
 						dark
 						onClick={() => {
-							this.props.createProject(this.props.template.templateName);
+							this.props.createProject(
+								this.props.template.templateName,
+								this.props.values,
+							);
 						}}
 					/>
 					<LibraryButton
