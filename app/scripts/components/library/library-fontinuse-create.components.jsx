@@ -9,6 +9,7 @@ import {
 	presetQuery,
 	libraryUserQuery,
 } from './library-main.components';
+import {tmpUpload} from '../../services/graphcool.services';
 
 class LibraryFontInUseCreate extends React.Component {
 	constructor(props) {
@@ -235,38 +236,24 @@ class LibraryFontInUseCreate extends React.Component {
 
 		acceptedFiles.forEach(async (file) => {
 			images.push(file.preview);
-			const formData = new FormData();
 
 			this.setState({
 				loading: true,
 			});
-			formData.append('data', file);
-			const response = await fetch(
-				'https://api.graph.cool/file/v1/prototypo-new-dev',
-				{
-					method: 'POST',
-					body: formData,
-				},
-			);
+			const data = await tmpUpload(file, file.name);
 
-			if (response.status === 200) {
-				return response.json().then((data) => {
-					if (data.url) {
-						const placeHolderIndex = images.findIndex(
-							i => i === file.preview,
-						);
-						const newImages = this.state.fontInUseMetadata.images;
+			if (data.url) {
+				const placeHolderIndex = images.findIndex(i => i === file.preview);
+				const newImages = this.state.fontInUseMetadata.images;
 
-						newImages[placeHolderIndex] = data.url;
-						this.setState({
-							fontInUseMetadata: {
-								...this.state.fontInUseMetadata,
-								isModified: true,
-								images: newImages,
-							},
-							loading: false,
-						});
-					}
+				newImages[placeHolderIndex] = data.url;
+				this.setState({
+					fontInUseMetadata: {
+						...this.state.fontInUseMetadata,
+						isModified: true,
+						images: newImages,
+					},
+					loading: false,
 				});
 			}
 		});

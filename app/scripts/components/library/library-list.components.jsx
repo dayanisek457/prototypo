@@ -226,6 +226,10 @@ class LibraryList extends React.Component {
 	}
 
 	generateFonts(f, p, fa) {
+		if (!this.state.templateInfos || !this.state.templatesData) {
+			return;
+		}
+
 		const families = f || this.props.families;
 		const presets = p || this.props.presets;
 		const favourites = fa || this.props.favourites || [];

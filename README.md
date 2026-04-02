@@ -39,7 +39,42 @@ Running Prototypo
 -----------------
 
 ```bash
-$ yarn start
+$ npm install
+$ npm run start
+```
+
+Local verification (sliders + export)
+-------------------------------------
+
+After `npm run start` is serving `http://127.0.0.1:3000`, run:
+
+```bash
+$ node test/playwright/local-smoke.mjs
+```
+
+What it verifies:
+- dashboard/editor loads correctly
+- a parameter slider changes control values
+- export from File menu produces a downloadable font file with a valid font signature
+
+Artifacts are written to your OS temp directory under `playwright-logs`:
+- `prototypo-dashboard-smoke.png` (UI screenshot)
+- exported font file downloaded during the smoke run
+
+If you still see Sass deprecation floods on `npm run start` (for example `lighten()` / `global-builtin` warnings), your local checkout is likely using stale lockfiles or stale `node_modules` from older commits. Do a clean reinstall, then start again:
+
+```bash
+# Linux/macOS
+rm -rf node_modules package-lock.json yarn.lock
+npm install
+npm run start
+```
+
+```powershell
+# Windows PowerShell
+Remove-Item -Recurse -Force node_modules, package-lock.json, yarn.lock
+npm install
+npm run start
 ```
 
 Roadmap to v1.0

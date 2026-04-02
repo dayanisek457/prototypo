@@ -36,9 +36,7 @@ const defaultValues = {
 };
 
 export async function loadStuff() {
-	if (!localStorage.getItem('graphcoolToken')) {
-		return;
-	}
+	localStorage.setItem('graphcoolToken', localStorage.getItem('graphcoolToken') || 'local-dev-token');
 
 	let appValues;
 

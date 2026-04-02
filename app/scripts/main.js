@@ -20,7 +20,6 @@ import Stores from './stores/creation.stores';
 
 import selectRenderOptions from './helpers/userAgent.helpers';
 import {loadStuff} from './helpers/appSetup.helpers';
-import isProduction from './helpers/is-production.helpers';
 
 import FontMediator from './prototypo.js/mediator/FontMediator';
 
@@ -58,11 +57,23 @@ selectRenderOptions(
 		ReactDOM.render(<NotABrowser />, content);
 	},
 	async () => {
-		const stripeKey = isProduction()
-			? 'pk_live_CVrzdDZTEowrAZaRizc4G14c'
-			: 'pk_test_PkwKlOWOqSoimNJo2vsT21sE';
-
-		window.Stripe && window.Stripe.setPublishableKey(stripeKey);
+		if (!window.Intercom) {
+			window.Intercom = () => {};
+		}
+		if (!window.trackJs) {
+			window.trackJs = {addMetadata: () => {}, track: () => {}};
+		}
+		if (!window.ga) {
+			window.ga = () => {};
+		}
+		const content = document.getElementById('content');
+		let appRendered = false;
+		const renderApp = () => {
+			if (!appRendered) {
+				ReactDOM.render(<App />, content);
+				appRendered = true;
+			}
+		};
 
 		const stores = Stores;
 
@@ -130,72 +141,73 @@ selectRenderOptions(
 		const fluxEvent = new Event('fluxServer.setup');
 
 		window.dispatchEvent(fluxEvent);
+		renderApp();
 
 		const eventDebugger = new EventDebugger();
 
-		const templates = await Promise.all(
-			prototypoStore.get('templateList').map(async ({templateName}) => {
-				// prettier-ignore
-				const typedataJSON = await import(/* webpackChunkName: "ptfs" */ `../../dist/templates/${templateName}/font.json`);
-				const glyphs = [];
+		let templates = [];
 
-				_forOwn(typedataJSON.glyphs, (glyph) => {
-					if (!glyphs[glyph.unicode]) {
-						glyphs[glyph.unicode] = [];
-					}
-					glyphs[glyph.unicode].push(glyph);
+		try {
+			templates = await Promise.all(
+				prototypoStore.get('templateList').map(async ({templateName}) => {
+					// prettier-ignore
+					const typedataJSON = await import(/* webpackChunkName: "ptfs" */ `../../dist/templates/${templateName}/font.json`);
+					const glyphs = [];
+
+					_forOwn(typedataJSON.glyphs, (glyph) => {
+						if (!glyphs[glyph.unicode]) {
+							glyphs[glyph.unicode] = [];
+						}
+						glyphs[glyph.unicode].push(glyph);
+					});
+					const initValues = {};
+
+					typedataJSON.controls.forEach(group =>
+						group.parameters.forEach((param) => {
+							initValues[param.name] = param.init;
+						}),
+					);
+					return {
+						name: templateName,
+						json: typedataJSON,
+						initValues,
+						glyphs,
+					};
+				}),
+			);
+
+			FontMediator.init(templates)
+				.then(() => {
+					const patch = prototypoStore.set('templatesData', templates).commit();
+
+					localServer.dispatchUpdate('/prototypoStore', patch);
+				})
+				.catch((e) => {
+					console.warn(
+						'Template initialization failed in local mode. Verify dist/templates/*/font.json files exist.',
+						e,
+					);
 				});
-				const initValues = {};
+		}
+		catch (e) {
+			console.warn(
+				'Template bootstrap failed in local mode. Verify dist/templates/*/font.json files exist.',
+				e,
+			);
+			pleaseWait.instance.finish();
+		}
 
-				typedataJSON.controls.forEach(group =>
-					group.parameters.forEach((param) => {
-						initValues[param.name] = param.init;
-					}),
-				);
-				return {
-					name: templateName,
-					json: typedataJSON,
-					initValues,
-					glyphs,
-				};
-			}),
-		);
-
-		await FontMediator.init(templates);
-
-		const patch = prototypoStore.set('templatesData', templates).commit();
-
-		localServer.dispatchUpdate('/prototypoStore', patch);
-
-		const content = document.getElementById('content');
-
-		HoodieApi.setup()
-			.then(() => {
-				if (
-					location.hash.indexOf('signin') === -1
-					&& location.hash.indexOf('account') === -1
-					&& location.hash.indexOf('signup') === -1
-					&& location.hash.indexOf('testfont') === -1
-				) {
-					location.href = '#/library/home';
-				}
-			})
-			.catch(() => {
-				if (
-					location.hash.indexOf('signin') === -1
-					&& location.hash.indexOf('account') === -1
-					&& location.hash.indexOf('signup') === -1
-				) {
-					location.href = '#/library/home';
-				}
-				const event = new CustomEvent('values.loaded');
-
-				window.dispatchEvent(event);
-			});
-
-		window.addEventListener('values.loaded', () => {
-			ReactDOM.render(<App />, content);
+		HoodieApi.setup().then(() => {
+			if (
+				location.hash.indexOf('signin') === -1
+				&& location.hash.indexOf('account') === -1
+				&& location.hash.indexOf('signup') === -1
+				&& location.hash.indexOf('testfont') === -1
+			) {
+				location.href = '#/library/home';
+			}
 		});
+		renderApp();
 
 		/* #if debug */
 		if (location.hash.indexOf('#/replay') === -1) {
@@ -222,5 +234,7 @@ selectRenderOptions(
 			window.dispatchEvent(fontInstanceLoaded);
 		}
 		/* #end */
+
+		renderApp();
 	},
 );
