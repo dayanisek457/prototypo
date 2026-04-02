@@ -285,11 +285,11 @@ export default {
 
 		const result = await apolloClient.query({
 			query: gql`
-				query getvariantscount {
+				query getVariantsCount {
 					user {
 						id
 						library {
-							variantsmeta: _variantsmeta {
+							variantsMeta: _variantsmeta {
 								count
 							}
 						}
@@ -301,10 +301,10 @@ export default {
 		const user = result && result.data && result.data.user;
 
 		if (user && user.library) {
-			window.intercom('update', {
+			window.Intercom('update', {
 				number_of_variants: user.library.reduce(
-					(numberofvariants, {variantsmeta}) =>
-						numberofvariants + variantsmeta.count,
+					(numberOfVariants, {variantsMeta = {count: 0}}) =>
+						numberOfVariants + variantsMeta.count,
 					0,
 				),
 			});
