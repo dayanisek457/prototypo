@@ -36,7 +36,7 @@ function values(prefix) {
 							}
 						`,
 					})
-					.then(({data}) => data.user)
+					.then(({data}) => (data && data.user ? data.user : {id: 'user-local', values: {}}))
 					.catch(e => trackJs.track(e));
 			}
 
