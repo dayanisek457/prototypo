@@ -30,36 +30,32 @@ class FontUpdater extends React.Component {
 
 	render() {
 		const {template, name, subset, glyph, values, family, variant} = this.props;
+		const fontMediatorInstance = this.fontMediatorInstance;
 
-		if (!values) {
-			return false;
+		if (!values || !fontMediatorInstance) {
+			return null;
 		}
 
-		const templateInitValues
-			= (this.fontMediatorInstance.initValues || {})[template] || {};
+		const templateInitValues = (fontMediatorInstance.initValues || {})[template] || {};
 		const sanitizedValues = {
 			...templateInitValues,
-			...Object.keys(values).reduce((acc, key) => {
-				if (values[key] !== undefined) {
-					acc[key] = values[key];
-				}
-
-				return acc;
-			}, {}),
+			...Object.fromEntries(
+				Object.entries(values).filter(([, value]) => value !== undefined),
+			),
 		};
 
 		const subsetCodes = _uniq(subset.split('')).map(letter =>
 			letter.charCodeAt(0),
 		);
 
-		this.fontMediatorInstance.setupInfo({
+		fontMediatorInstance.setupInfo({
 			family,
 			style: variant,
 			template,
 			email: HoodieApi.instance.email,
 		});
 
-		this.fontMediatorInstance.getFont(
+		fontMediatorInstance.getFont(
 			name,
 			template,
 			sanitizedValues,
@@ -67,7 +63,7 @@ class FontUpdater extends React.Component {
 			glyph,
 		);
 
-		return false;
+		return null;
 	}
 }
 
