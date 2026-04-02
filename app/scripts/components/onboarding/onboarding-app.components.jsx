@@ -757,7 +757,7 @@ export default compose(
 				return {loading: true};
 			}
 
-			return {userId: data.user.id};
+			return {userId: data.user && data.user.id};
 		},
 	}),
 	graphql(createFamilyMutation, {

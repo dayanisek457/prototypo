@@ -197,7 +197,7 @@ export default {
 
 		saveAppValues();
 
-		const {data: {user}} = await apolloClient.query({
+		const result = await apolloClient.query({
 			query: gql`
 				query getVariantsCount {
 					user {
@@ -210,9 +210,13 @@ export default {
 			`,
 		});
 
-		window.Intercom('update', {
-			number_of_family: user.libraryMeta.count,
-		});
+		const user = result && result.data && result.data.user;
+
+		if (user && user.libraryMeta) {
+			window.Intercom('update', {
+				number_of_family: user.libraryMeta.count,
+			});
+		}
 	},
 	'/select-variant': ({family, selectedVariant = family.variants[0]}) => {
 		localClient.dispatchAction('/change-font', {
@@ -279,7 +283,7 @@ export default {
 			errorAddVariant: undefined,
 		});
 
-		const {data: {user}} = await apolloClient.query({
+		const result = await apolloClient.query({
 			query: gql`
 				query getvariantscount {
 					user {
@@ -294,13 +298,17 @@ export default {
 			`,
 		});
 
-		window.intercom('update', {
-			number_of_variants: user.library.reduce(
-				(numberofvariants, {variantsmeta}) =>
-					numberofvariants + variantsmeta.count,
-				0,
-			),
-		});
+		const user = result && result.data && result.data.user;
+
+		if (user && user.library) {
+			window.intercom('update', {
+				number_of_variants: user.library.reduce(
+					(numberofvariants, {variantsmeta}) =>
+						numberofvariants + variantsmeta.count,
+					0,
+				),
+			});
+		}
 	},
 	'/delete-variant': ({variant}) => {
 		console.log('DeleteVariant');
@@ -328,7 +336,7 @@ export default {
 			family.name === currentFamily.name
 			&& family.template === currentFamily.template
 		) {
-			const {data: {user}} = await apolloClient.query({
+			const result = await apolloClient.query({
 				fetchPolicy: 'cache-first',
 				query: gql`
 					query getUserLibrary {
@@ -347,6 +355,11 @@ export default {
 					}
 				`,
 			});
+
+			const user = result && result.data && result.data.user;
+			if (!user || !user.library || user.library.length === 0) {
+				return;
+			}
 
 			const newFamily = {...user.library[0]};
 

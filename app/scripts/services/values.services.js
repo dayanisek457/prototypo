@@ -20,8 +20,15 @@ function values(prefix) {
 						`,
 						variables: {id: params.variantId},
 					})
-					.then(({data}) => data.Variant)
-					.catch(e => trackJs.track(e));
+					.then(({data}) =>
+						data && data.Variant
+							? data.Variant
+							: {id: params.variantId, values: {}},
+					)
+					.catch((e) => {
+						trackJs.track(e);
+						return {id: params.variantId, values: {}};
+					});
 			}
 			if (prefix === 'newapp') {
 				return apolloClient
@@ -72,7 +79,13 @@ function values(prefix) {
 							}
 						`,
 					})
-					.then(({data: {user}}) => {
+					.then(({data}) => {
+						const user = data && data.user;
+
+						if (!user || !user.id) {
+							return;
+						}
+
 						apolloClient
 							.mutate({
 								mutation: gql`
