@@ -32,7 +32,15 @@ class FontUpdater extends React.Component {
 		const {template, name, subset, glyph, values, family, variant} = this.props;
 		const fontMediatorInstance = this.fontMediatorInstance;
 
-		if (!values || !fontMediatorInstance) {
+		if (
+			!values
+			|| !fontMediatorInstance
+			|| !template
+			|| !name
+			|| !subset
+			|| glyph === undefined
+			|| glyph === null
+		) {
 			return null;
 		}
 
@@ -40,7 +48,9 @@ class FontUpdater extends React.Component {
 		const sanitizedValues = {
 			...templateInitValues,
 			...Object.fromEntries(
-				Object.entries(values).filter(([, value]) => value !== undefined),
+				Object.entries(values).filter(
+					([, value]) => value !== undefined && value !== null,
+				),
 			),
 		};
 
