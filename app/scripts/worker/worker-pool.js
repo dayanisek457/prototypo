@@ -67,7 +67,7 @@ export default class WorkerPool {
 
 					if (this.jobCallback[id]) {
 						this.jobCallback[id](fontBuffer);
-						this.jobCallback[id] = undefined;
+						delete this.jobCallback[id];
 					}
 				}
 				else if (data && typeof data.id === 'string' && data.id.indexOf('each') === 0) {
@@ -79,7 +79,7 @@ export default class WorkerPool {
 						eachJobList = [];
 						if (this.jobCallback[data.id]) {
 							this.jobCallback[data.id](data);
-							this.jobCallback[data.id] = undefined;
+							delete this.jobCallback[data.id];
 						}
 					}
 				}

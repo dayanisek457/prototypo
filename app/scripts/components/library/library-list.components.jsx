@@ -284,10 +284,7 @@ class LibraryList extends React.Component {
 				elem: TemplateItem,
 			});
 		});
-		const havasPreset
-			= presets
-			&& templateInfos
-			&& presets.find(e => e.ownerInitials === 'HAVAS');
+		const havasPreset = presets.find(e => e.ownerInitials === 'HAVAS');
 
 		if (havasPreset) {
 			const templateInfo = templateInfos.find(
@@ -297,42 +294,37 @@ class LibraryList extends React.Component {
 				e => e.name === havasPreset.template,
 			);
 
-			if (!templateData || !templateData.initValues) {
-				return;
+			if (templateData && templateData.initValues) {
+				fontData.push({
+					template: templateInfo.templateName,
+					templateName: templateInfo.name,
+					type: 'Preset',
+					name: havasPreset.variant.family.name,
+					designer: 'Havas',
+					id: havasPreset.id,
+					tags: [],
+					props: this.getPresetProps(
+						havasPreset,
+						templateInfo,
+						templateData,
+						lmColor,
+						hmColor,
+						favourites,
+					),
+					elem: PresetItem,
+				});
 			}
-
-			fontData.push({
-				template: templateInfo.templateName,
-				templateName: templateInfo.name,
-				type: 'Preset',
-				name: havasPreset.variant.family.name,
-				designer: 'Havas',
-				id: havasPreset.id,
-				tags: [],
-				props: this.getPresetProps(
-					havasPreset,
-					templateInfo,
-					templateData,
-					lmColor,
-					hmColor,
-					favourites,
-				),
-				elem: PresetItem,
-			});
 		}
-		const filteredPresets
-			= presets
-			&& templateInfos
-			&& presets.filter(
-				preset =>
-					preset.variant.family.name !== 'Spectral'
-					&& preset.variant.family.name !== 'Elzevir'
-					&& preset.variant.family.name !== 'Grotesk'
-					&& preset.variant.family.name !== 'Fell'
-					&& preset.variant.family.name !== 'Antique'
-					&& preset.variant.family.name !== 'Prototypo Grotesk'
-					&& preset.ownerInitials !== 'HAVAS',
-			);
+		const filteredPresets = presets.filter(
+			preset =>
+				preset.variant.family.name !== 'Spectral'
+				&& preset.variant.family.name !== 'Elzevir'
+				&& preset.variant.family.name !== 'Grotesk'
+				&& preset.variant.family.name !== 'Fell'
+				&& preset.variant.family.name !== 'Antique'
+				&& preset.variant.family.name !== 'Prototypo Grotesk'
+				&& preset.ownerInitials !== 'HAVAS',
+		);
 
 		if (filteredPresets) {
 			filteredPresets.forEach((preset) => {
@@ -393,7 +385,7 @@ class LibraryList extends React.Component {
 
 				family.tags && family.tags.map(tag => allTags.push(tag));
 				const variantToLoad
-					= variants.find(e => e.name && e.name.toLowerCase() === 'regular')
+					= variants.find(e => e && e.name && e.name.toLowerCase() === 'regular')
 					|| variants[0];
 
 				if (variantToLoad) {
@@ -458,7 +450,7 @@ class LibraryList extends React.Component {
 						family.tags && family.tags.map(tag => allTags.push(tag));
 						const variantToLoad
 							= variants.find(
-								e => e.name && e.name.toLowerCase() === 'regular',
+								e => e && e.name && e.name.toLowerCase() === 'regular',
 							)
 							|| variants[0];
 
