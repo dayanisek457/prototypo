@@ -118,8 +118,18 @@ class Dashboard extends React.PureComponent {
 
 		if (joyrideSteps.length) {
 			setTimeout(() => {
-				this.addSteps(joyrideSteps);
-				this.refs.joyride.start(true);
+				try {
+					this.addSteps(joyrideSteps);
+					if (this.refs.joyride && typeof this.refs.joyride.start === 'function') {
+						this.refs.joyride.start(true);
+					}
+				}
+				catch (e) {
+					this.client.dispatchAction('/store-value', {
+						uiJoyrideTutorialValue: undefined,
+					});
+					this.setState({joyrideSteps: []});
+				}
 			}, 400);
 		}
 	}
@@ -131,7 +141,7 @@ class Dashboard extends React.PureComponent {
 	addSteps(steps) {
 		const joyride = this.refs.joyride;
 
-		if (!steps.length) {
+		if (!steps.length || !joyride || typeof joyride.parseSteps !== 'function') {
 			return false;
 		}
 
@@ -146,7 +156,9 @@ class Dashboard extends React.PureComponent {
 	}
 
 	addTooltip(data) {
-		this.refs.joyride.addTooltip(data);
+		if (this.refs.joyride && typeof this.refs.joyride.addTooltip === 'function') {
+			this.refs.joyride.addTooltip(data);
+		}
 	}
 
 	joyrideCallback(joyrideEvent) {
@@ -157,11 +169,15 @@ class Dashboard extends React.PureComponent {
 				break;
 			case 'close':
 				handleClosed(this);
-				this.refs.joyride.stop();
+				if (this.refs.joyride && typeof this.refs.joyride.stop === 'function') {
+					this.refs.joyride.stop();
+				}
 				break;
 			case 'esc':
 				handleClosed(this);
-				this.refs.joyride.stop();
+				if (this.refs.joyride && typeof this.refs.joyride.stop === 'function') {
+					this.refs.joyride.stop();
+				}
 				break;
 			default:
 				break;
