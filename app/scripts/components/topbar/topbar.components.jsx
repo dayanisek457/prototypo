@@ -669,13 +669,17 @@ const getAcademyValuesQuery = gql`
 export default compose(
 	graphql(getAcademyValuesQuery, {
 		props({data}) {
+			const academyProgress = (data && data.user && data.user.academyProgress)
+				|| {lastCourse: null};
+			const manager = (data && data.user && data.user.manager) || null;
+
 			if (data.loading) {
-				return {loadingAcademyProgress: true};
+				return {loadingAcademyProgress: true, academyProgress, manager};
 			}
 
 			return {
-				academyProgress: data.user.academyProgress,
-				manager: data.user.manager,
+				academyProgress,
+				manager,
 			};
 		},
 	}),
@@ -700,18 +704,21 @@ export default compose(
 			fetchPolicy: 'cache-first',
 		},
 		props: ({data}) => {
+			const families = (data && data.user && Array.isArray(data.user.library))
+				? data.user.library : [];
+
 			if (data.loading) {
-				return {loading: true};
+				return {loading: true, families};
 			}
 
 			if (data.user) {
 				return {
-					families: data.user.library,
+					families,
 					refetch: data.refetch,
 				};
 			}
 
-			return {refetch: data.refetch};
+			return {families, refetch: data.refetch};
 		},
 	}),
 )(withCountry(Topbar));
