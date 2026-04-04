@@ -417,7 +417,7 @@ class OnboardingApp extends React.PureComponent {
 							neutral
 							size="small"
 							className="skip"
-							onClick={() => this.props.router.push('/dashboard')}
+							onClick={() => this.finishOnboarding()}
 						>
 								Skip
 						</Button>
