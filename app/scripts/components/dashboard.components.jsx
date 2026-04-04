@@ -19,7 +19,7 @@ import ChangeNameVariant from './familyVariant/change-name-variant.components.js
 import DuplicateVariant from './familyVariant/duplicate-variant.components.jsx';
 import GoProModal from './go-pro-modal.components.jsx';
 
-const tutorialsEnabled = false;
+const tutorialsEnabled = process.env.ENABLE_TUTORIALS === 'true';
 
 class Dashboard extends React.PureComponent {
 	constructor(props) {
@@ -110,7 +110,7 @@ class Dashboard extends React.PureComponent {
 		this.lifespan.release();
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate() {
 		if (!tutorialsEnabled) {
 			return;
 		}
@@ -138,11 +138,19 @@ class Dashboard extends React.PureComponent {
 	}
 
 	addTooltip(data) {
-		return data;
+		if (
+			tutorialsEnabled
+			&& this.refs.joyride
+			&& typeof this.refs.joyride.addTooltip === 'function'
+		) {
+			this.refs.joyride.addTooltip(data);
+		}
 	}
 
 	joyrideCallback(joyrideEvent) {
-		return joyrideEvent;
+		if (!tutorialsEnabled || !joyrideEvent) {
+			return;
+		}
 	}
 
 	goToNextStep(step) {
@@ -187,7 +195,7 @@ class Dashboard extends React.PureComponent {
 				propName="openVariantModal"
 			/>
 		);
-		const explainAcademy = false;
+		const explainAcademy = null;
 		const hostVariantModal = this.state.openHostVariantModal && (
 			<HostVariantModal
 				family={this.state.familySelectedVariantCreation}
