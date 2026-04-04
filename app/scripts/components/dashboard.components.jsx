@@ -281,6 +281,12 @@ const setFirstContactMadeMutation = gql`
 	}
 `;
 
+const dashboardFallbackUser = {
+	firstContactMade: false,
+	id: undefined,
+	library: [],
+};
+
 export default compose(
 	graphql(getUserFontsAndFirstContactMadeQuery, {
 		options: {
@@ -288,12 +294,26 @@ export default compose(
 		},
 		props({data}) {
 			if (data.loading) {
-				return {loading: true};
+				const loadingUser = (data && data.user) || dashboardFallbackUser;
+				const loadingLibrary = Array.isArray(loadingUser.library)
+					? loadingUser.library
+					: [];
+
+				return {
+					loading: true,
+					library: loadingLibrary,
+					firstContactMade: loadingUser.firstContactMade,
+					userID: loadingUser.id,
+				};
 			}
+
+			const user = (data && data.user) || dashboardFallbackUser;
+			const library = Array.isArray(user.library) ? user.library : [];
+
 			return {
-				library: data.user.library || [],
-				firstContactMade: data.user.firstContactMade,
-				userID: data.user.id,
+				library,
+				firstContactMade: user.firstContactMade,
+				userID: user.id,
 			};
 		},
 	}),
