@@ -30,27 +30,50 @@ class FontUpdater extends React.Component {
 
 	render() {
 		const {template, name, subset, glyph, values, family, variant} = this.props;
+		const fontMediatorInstance = this.fontMediatorInstance;
+
+		if (
+			!values
+			|| !fontMediatorInstance
+			|| !template
+			|| !name
+			|| !subset
+			|| glyph === undefined
+			|| glyph === null
+		) {
+			return null;
+		}
+
+		const templateInitValues = (fontMediatorInstance.initValues || {})[template] || {};
+		const sanitizedValues = {
+			...templateInitValues,
+			...Object.fromEntries(
+				Object.entries(values).filter(
+					([, value]) => value !== undefined && value !== null,
+				),
+			),
+		};
 
 		const subsetCodes = _uniq(subset.split('')).map(letter =>
 			letter.charCodeAt(0),
 		);
 
-		this.fontMediatorInstance.setupInfo({
+		fontMediatorInstance.setupInfo({
 			family,
 			style: variant,
 			template,
 			email: HoodieApi.instance.email,
 		});
 
-		this.fontMediatorInstance.getFont(
+		fontMediatorInstance.getFont(
 			name,
 			template,
-			values,
+			sanitizedValues,
 			subsetCodes,
 			glyph,
 		);
 
-		return false;
+		return null;
 	}
 }
 

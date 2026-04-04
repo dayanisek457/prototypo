@@ -307,12 +307,15 @@ export default graphql(libraryQuery, {
 		fetchPolicy: 'cache-first', // this prevents any empty state for now
 	},
 	props: ({data}) => {
+		const families = (data && data.user && Array.isArray(data.user.library))
+			? data.user.library : [];
+
 		if (data.loading) {
-			return {loading: true};
+			return {loading: true, families};
 		}
 
 		return {
-			families: data.user.library,
+			families,
 		};
 	},
 })(withRouter(ArianneThread));

@@ -158,6 +158,11 @@ export default {
 		);
 
 		const fontValues = await FontValues.get({variantId: variant.id});
+		const safeFontValues = Object.fromEntries(
+			Object.entries((fontValues && fontValues.values) || {}).filter(
+				([, value]) => value !== undefined && value !== null,
+			),
+		);
 
 		const patchVariant = prototypoStore
 			.set('variant', variant)
@@ -168,12 +173,12 @@ export default {
 
 		const altList = {
 			...typedataJSON.fontinfo.defaultAlts,
-			...fontValues.values.altList,
+			...safeFontValues.altList,
 		};
 
 		localClient.dispatchAction('/load-values', {
 			...initValues,
-			...fontValues.values,
+			...safeFontValues,
 		});
 
 		localClient.dispatchAction('/clear-undo-stack');

@@ -59,10 +59,15 @@ export async function loadFontValues(typedata, typeface, variantId) {
 
 	try {
 		const fontValues = await FontValues.get({typeface, variantId});
+		const safeFontValues = Object.fromEntries(
+			Object.entries((fontValues && fontValues.values) || {}).filter(
+				([, value]) => value !== undefined && value !== null,
+			),
+		);
 
 		localClient.dispatchAction('/load-values', {
 			...initValues,
-			...fontValues.values,
+			...safeFontValues,
 		});
 	}
 	catch (err) {
