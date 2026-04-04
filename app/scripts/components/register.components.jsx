@@ -64,7 +64,7 @@ class Register extends React.Component {
 		});
 
 		this.props.router.push({
-			pathname: this.props.location.query.prevHash || '/library/home',
+			pathname: this.props.location.query.prevHash || '/dashboard',
 			query: this.props.location.query,
 		});
 	}

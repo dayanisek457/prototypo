@@ -204,7 +204,7 @@ selectRenderOptions(
 				&& location.hash.indexOf('signup') === -1
 				&& location.hash.indexOf('testfont') === -1
 			) {
-				location.href = '#/library/home';
+				location.href = '#/dashboard';
 			}
 		});
 		renderApp();
