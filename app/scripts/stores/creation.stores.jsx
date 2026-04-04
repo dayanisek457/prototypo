@@ -193,12 +193,12 @@ const prototypoStore = new Remutable({
 	// end glyph select store values
 
 	// first time tutorial store values
-	firstTimeFile: true,
-	firstTimeCollection: true,
-	firstTimeIndivCreate: true,
-	firstTimeIndivEdit: true,
-	firstTimeAcademyModal: true,
-	firstTimeAcademyJoyride: true,
+	firstTimeFile: false,
+	firstTimeCollection: false,
+	firstTimeIndivCreate: false,
+	firstTimeIndivEdit: false,
+	firstTimeAcademyModal: false,
+	firstTimeAcademyJoyride: false,
 	// end first time tutorial store values
 });
 

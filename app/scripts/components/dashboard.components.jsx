@@ -5,7 +5,6 @@ import pleaseWait from 'please-wait';
 import Lifespan from 'lifespan';
 import classNames from 'classnames';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import Joyride from 'react-joyride';
 
 import LocalClient from '../stores/local-client.stores.jsx';
 
@@ -15,17 +14,12 @@ import Workboard from './workboard.components.jsx';
 import ExportAs from './export-as.components.jsx';
 import HostVariantModal from './familyVariant/host-variant-modal.components';
 import CreateVariantModal from './familyVariant/create-variant-modal.components.jsx';
-import CreateAcademyModal from './academy/create-academy-modal.components.jsx';
 import ChangeNameFamily from './familyVariant/change-name-family.components.jsx';
 import ChangeNameVariant from './familyVariant/change-name-variant.components.jsx';
 import DuplicateVariant from './familyVariant/duplicate-variant.components.jsx';
 import GoProModal from './go-pro-modal.components.jsx';
 
-import {
-	buildTutorialSteps,
-	handleNextStep,
-	handleClosed,
-} from '../helpers/joyride.helpers.js';
+const tutorialsEnabled = false;
 
 class Dashboard extends React.PureComponent {
 	constructor(props) {
@@ -55,13 +49,15 @@ class Dashboard extends React.PureComponent {
 
 		this.setState({
 			joyrideSteps: [],
-			firstTimeFile: prototypoStore.head.toJS().firstTimeFile,
-			firstTimeCollection: prototypoStore.head.toJS().firstTimeCollection,
-			firstTimeIndivCreate: prototypoStore.head.toJS().firstTimeIndivCreate,
-			firstTimeIndivEdit: prototypoStore.head.toJS().firstTimeIndivEdit,
-			firstTimeAcademyModal: prototypoStore.head.toJS().firstTimeAcademyModal,
-			firstTimeAcademyJoyride: prototypoStore.head.toJS()
-				.firstTimeAcademyJoyride,
+			firstTimeFile: tutorialsEnabled && prototypoStore.head.toJS().firstTimeFile,
+			firstTimeCollection:
+				tutorialsEnabled && prototypoStore.head.toJS().firstTimeCollection,
+			firstTimeIndivCreate:
+				tutorialsEnabled && prototypoStore.head.toJS().firstTimeIndivCreate,
+			firstTimeIndivEdit:
+				tutorialsEnabled && prototypoStore.head.toJS().firstTimeIndivEdit,
+			firstTimeAcademyModal: false,
+			firstTimeAcademyJoyride: false,
 		});
 
 		let firstContactTimeoutMade = false;
@@ -97,11 +93,12 @@ class Dashboard extends React.PureComponent {
 					indiv: head.toJS().d.indivMode,
 					exportAs: head.toJS().d.exportAs,
 					uiJoyrideTutorialValue: head.toJS().d.uiJoyrideTutorialValue,
-					firstTimeFile: head.toJS().d.firstTimeFile,
-					firstTimeIndivCreate: head.toJS().d.firstTimeIndivCreate,
-					firstTimeIndivEdit: head.toJS().d.firstTimeIndivEdit,
-					firstTimeAcademyModal: head.toJS().d.firstTimeAcademyModal,
-					firstTimeAcademyJoyride: head.toJS().d.firstTimeAcademyJoyride,
+					firstTimeFile: tutorialsEnabled && head.toJS().d.firstTimeFile,
+					firstTimeIndivCreate:
+						tutorialsEnabled && head.toJS().d.firstTimeIndivCreate,
+					firstTimeIndivEdit: tutorialsEnabled && head.toJS().d.firstTimeIndivEdit,
+					firstTimeAcademyModal: false,
+					firstTimeAcademyJoyride: false,
 				});
 			})
 			.onDelete(() => {
@@ -114,23 +111,8 @@ class Dashboard extends React.PureComponent {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const joyrideSteps = buildTutorialSteps(prevState, this.state);
-
-		if (joyrideSteps.length) {
-			setTimeout(() => {
-				try {
-					this.addSteps(joyrideSteps);
-					if (this.refs.joyride && typeof this.refs.joyride.start === 'function') {
-						this.refs.joyride.start(true);
-					}
-				}
-				catch (e) {
-					this.client.dispatchAction('/store-value', {
-						uiJoyrideTutorialValue: undefined,
-					});
-					this.setState({joyrideSteps: []});
-				}
-			}, 400);
+		if (!tutorialsEnabled) {
+			return;
 		}
 	}
 
@@ -156,33 +138,11 @@ class Dashboard extends React.PureComponent {
 	}
 
 	addTooltip(data) {
-		if (this.refs.joyride && typeof this.refs.joyride.addTooltip === 'function') {
-			this.refs.joyride.addTooltip(data);
-		}
+		return data;
 	}
 
 	joyrideCallback(joyrideEvent) {
-		if (joyrideEvent) {
-			switch (joyrideEvent.action) {
-			case 'next':
-				handleNextStep(this, joyrideEvent);
-				break;
-			case 'close':
-				handleClosed(this);
-				if (this.refs.joyride && typeof this.refs.joyride.stop === 'function') {
-					this.refs.joyride.stop();
-				}
-				break;
-			case 'esc':
-				handleClosed(this);
-				if (this.refs.joyride && typeof this.refs.joyride.stop === 'function') {
-					this.refs.joyride.stop();
-				}
-				break;
-			default:
-				break;
-			}
-		}
+		return joyrideEvent;
 	}
 
 	goToNextStep(step) {
@@ -221,22 +181,13 @@ class Dashboard extends React.PureComponent {
 
 		// here modify ReactJoyride's labels
 
-		const joyrideLocale = {
-			back: 'Back',
-			close: 'Close',
-			last: 'OK',
-			next: 'Next',
-			skip: 'Skip',
-		};
 		const newVariant = this.state.openVariantModal && (
 			<CreateVariantModal
 				family={this.state.familySelectedVariantCreation}
 				propName="openVariantModal"
 			/>
 		);
-		const explainAcademy = this.state.firstTimeAcademyModal && (
-			<CreateAcademyModal propName="openAcademyModal" />
-		);
+		const explainAcademy = false;
 		const hostVariantModal = this.state.openHostVariantModal && (
 			<HostVariantModal
 				family={this.state.familySelectedVariantCreation}
@@ -279,16 +230,6 @@ class Dashboard extends React.PureComponent {
 
 		return (
 			<div id="dashboard" className={classes}>
-				<Joyride
-					ref="joyride"
-					type="continuous"
-					scrollToFirstStep={false}
-					scrollToSteps={false}
-					debug={false}
-					locale={joyrideLocale}
-					steps={this.state.joyrideSteps}
-					callback={this.joyrideCallback}
-				/>
 				<Topbar />
 				<Toolbar />
 				<Workboard />
