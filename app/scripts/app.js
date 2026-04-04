@@ -100,7 +100,7 @@ function redirectToDashboard(nextState, replace) {
 		}
 		else {
 			replace({
-				pathname: '/library/home',
+				pathname: '/dashboard',
 				state: {nextPathname: nextState.location.pathname},
 			});
 		}
